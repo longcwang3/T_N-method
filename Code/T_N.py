@@ -17,7 +17,14 @@ class TN:
         self.N = N #nth order approximation
     
     def geo(self,xi,xf,M,XS_t,XS_s,Q):
-        '''definet the geometry and material properties'''
+        '''Definet the geometry and material properties. 
+        The domain is from ''xi'' to ''xf''.
+        M is the mesh size, that is, how many nodes the entire domain is 
+        divide.
+        ''XS_t'' and ''XS_s'' are the isotropic total cross section and 
+        scattering cross section, respectively.
+        ''Q'' is the isotropic source term.
+        '''
         self.xi = xi                    #left boundary of domain
         self.xf = xf                    #right boundary of domain
         self.x = np.linspace(xi,xf,M)   #generate mesh
@@ -114,16 +121,24 @@ class TN:
         self.F = np.linalg.solve(A,Qv)
         self.phi0 = np.zeros((M))
         for m in range(0,size_F+1):
-            '''solve the scalar flux phi_0'''
+            
+           #solve the scalar flux phi_0
+           
             self.phi0 += self.F[m*M:(m+1)*M]*(-1)**m
-
+            
+# Material properties needed
+            
 XS_t = 0.17
 XS_s = 0.1
 Q = 5
-'''import results from P1 & P3'''
+
+# import results from P1 & P3
+
 P1_phi0 = np.load('phi0_P1.npy')
 P3_phi0 = np.load('phi0_P3.npy')
-'''Conduct the order of accuracy convergence'''
+
+# Conduct the order of accuracy convergence
+
 T_N = []
 T_N.append(TN(1))
 T_N[0].geo(0,100,619,XS_t,XS_s,Q)
@@ -140,7 +155,8 @@ while error >= 1e-3:
     print(error)
     n += 1
     
-'''Visualization of results'''
+#Visualization of results
+
 n_plot = np.arange(3,2*n+1,2)
 x_plot = np.linspace(0,100,619)
 x_P = np.linspace(0,100,1001)
